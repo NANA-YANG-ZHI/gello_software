@@ -11,10 +11,10 @@ chosen so that no joint exceeds ``max_vel`` (rad/s) or ``max_acc`` (rad/s^2).
 Example::
 
     from gello.zmq_core.robot_node import ZMQClientRobot
-    from gello.utils.move_to_start import UR_HOME_JOINTS, move_to_joints
+    from gello.utils.move_to_start import move_to_start
 
     robot = ZMQClientRobot(port=6001, host="127.0.0.1")
-    result = move_to_joints(robot, UR_HOME_JOINTS, max_vel=0.5)
+    result = move_to_start(robot)  # UR "home" pose
     print(result)
 """
 
@@ -220,3 +220,20 @@ def move_to_joints(
         if verbose:
             print("Interrupted: holding current position")
         raise
+
+
+def move_to_start(
+    robot: Robot,
+    start_joints: Optional[Sequence[float]] = None,
+    **kwargs,
+) -> MoveResult:
+    """Move the arm back to its start position from wherever it is.
+
+    Args:
+        robot: Robot to command (e.g. ``ZMQClientRobot`` for ``sim_ur`` / ``ur``).
+        start_joints: Arm joint targets in radians. Defaults to the UR "home" pose
+            ``UR_HOME_JOINTS``.
+        **kwargs: Passed to :func:`move_to_joints` (``max_vel``, ``gripper``, ...).
+    """
+    target = UR_HOME_JOINTS if start_joints is None else start_joints
+    return move_to_joints(robot, target, **kwargs)

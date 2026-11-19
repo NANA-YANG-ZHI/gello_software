@@ -7,6 +7,7 @@ from gello.utils.move_to_start import (
     UR_HOME_JOINTS,
     min_jerk,
     move_to_joints,
+    move_to_start,
     plan_trajectory,
     trajectory_duration,
 )
@@ -95,6 +96,14 @@ def test_gripper_override():
     robot2 = LagRobot(np.r_[np.zeros(6), 1.0], FakeClock())
     run(robot2, robot2.clock, UR_HOME_JOINTS, gripper=0.0)
     assert all(c[6] == 0.0 for c in robot2.commands)
+
+
+def test_move_to_start_defaults_to_home():
+    clock = FakeClock()
+    robot = LagRobot(np.r_[np.zeros(6), 0.3], clock)
+    result = move_to_start(robot, control_hz=HZ, verbose=False, clock=clock, sleep=clock.sleep)
+    assert result.success
+    assert np.allclose(robot.q[:6], UR_HOME_JOINTS, atol=0.01)
 
 
 def test_already_at_target():
