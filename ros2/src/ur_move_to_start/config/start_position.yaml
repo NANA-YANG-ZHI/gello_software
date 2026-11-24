@@ -1,0 +1,10 @@
+# Start pose for move_to_start, in radians.
+# Same flat format as ur_description's initial_positions.yaml, so you can also pass
+# custom_ur_description/config/initial_positions.yaml (or pushing_demo_initial_positions.yaml)
+# with --start-file instead of editing this file.
+shoulder_pan_joint: 0.0
+shoulder_lift_joint: -1.5708
+elbow_joint: 1.5708
+wrist_1_joint: -1.5708
+wrist_2_joint: -1.5708
+wrist_3_joint: 0.0
